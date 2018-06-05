@@ -1,0 +1,9 @@
+D&D Bot Planning-
+
+FEATURES:
+
+-dice rolls (ex: !roll 2d20 output: You rolled: 14)
+
+-combat rolls (ex: !atk goblin shortsword output: Your hit roll: 14. Hits! Damage roll (2d8): 12 Piercing. Goblin dies!)
+
+-query api for spells, classes, other info (!lookup spell 
