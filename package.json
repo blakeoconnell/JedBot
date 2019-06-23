@@ -1,0 +1,25 @@
+{
+
+    "name": "Jedbot",
+  
+    "description": "Evolved Helper Bot",
+  
+    "version": "0.0.0",
+  
+    "main": "waifu.js",
+  
+    "scripts": {
+  
+      "start": "node waifu.js"
+  
+    },
+  
+    "dependencies": {
+  
+      "discord.js": "11.1.0",
+  
+      "request": "2.81.0"
+  
+    }
+  
+  }
