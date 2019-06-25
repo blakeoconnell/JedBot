@@ -18,7 +18,7 @@ var debug = false
 var welcomeChannelID = '<#485565633099071509>'
 
 //bot spam channel
-var botChannel = '585994441957965824'
+var botChannel = '482491530935009280'
 
 //CHANGEABLE VARIABLES
 
@@ -27,16 +27,16 @@ var roles = ["Destiny-2", "Division-2", "Diablo-3", "ESO", "FFXIV", "Get-Togethe
 
 //role announcement channel dict
 var roleAnnouncementChannels = {
-    'Destiny-2' : '526564744430223360', 'Division-2' : '526564744430223360', 'Diablo-3' : '526564744430223360',
-    'ESO' : '512441526362701825', 'FFXIV' : '554728750684831756', 'Minecraft' : '526564744430223360',
-    'WoW-A' : '497199207937998850', 'WoW-C' : '526564744430223360', 'WoW-H' : '512248600663818240'
+    'Destiny-2': '526564744430223360', 'Division-2': '526564744430223360', 'Diablo-3': '526564744430223360',
+    'ESO': '512441526362701825', 'FFXIV': '554728750684831756', 'Minecraft': '526564744430223360',
+    'WoW-A': '497199207937998850', 'WoW-C': '526564744430223360', 'WoW-H': '512248600663818240'
 };
 
 //role chat channel dict
 var roleChatChannels = {
-    "Destiny-2" : '485266848598982677', "Division-2" : '485266848598982677', "Diablo-3" : '485266848598982677', "ESO" : '512441643731910656', 
-    FFXIV : '554729746240503820', "Get-Together" : '585910866461982744', "Minecraft" : '591832637275111445', "WoW-A" : '483029202979782666', 
-    "WoW-C" : '591981450992025603', "WoW-H" : '512249205280997380'
+    "Destiny-2": '485266848598982677', "Division-2": '485266848598982677', "Diablo-3": '485266848598982677', "ESO": '512441643731910656',
+    FFXIV: '554729746240503820', "Get-Together": '585910866461982744', "Minecraft": '591832637275111445', "WoW-A": '483029202979782666',
+    "WoW-C": '591981450992025603', "WoW-H": '512249205280997380'
 };
 
 //ERROR MESSAGES - Edit this as you like.
@@ -87,7 +87,7 @@ client.once('ready', () => {
 
 client.on('message', async message => {
 
-    if(message.channel.type === 'dm' && !message.author.bot){
+    if (message.channel.type === 'dm' && !message.author.bot) {
         message.author.send(dmError)
         return
     }
@@ -153,11 +153,11 @@ client.on('message', async message => {
         avastiCommand(message, args)
     }
 
-    else if (command === 'tae'){
+    else if (command === 'tae') {
         message.channel.send('https://tenor.com/view/sad-walk-of-shame-shame-shameful-head-down-gif-5548725')
     }
 
-    else if (command === 'cata'){
+    else if (command === 'cata') {
         message.channel.send('https://tenor.com/view/angry-panda-mascot-mad-gif-3456638')
     }
 
@@ -272,7 +272,7 @@ async function iamCommand(message, args) {
                                         if (body.username != message.member.nickname) {
                                             message.channel.send(`Welcome to Evolved, <@${message.author.id}>! You\'ve been given the \'Member\' role and can now see all of the channels! You can use the \'.setRole\' command to assign yourself roles pertaining to specific games. Check the ${welcomeChannelID} channel for more info.`)
                                             message.channel.send(iAmFailedToSetDiscord)
-                                        } 
+                                        }
                                     }
 
                                 }
@@ -316,14 +316,14 @@ async function setRoleCommand(message, args) {
                 message.channel.send(setRoleAlreadyError)
             }
             else {
-               // console.log('didnt fail yet')
+                // console.log('didnt fail yet')
                 try {
                     await guildMember.addRole(role)
-                    if (roleName in roleAnnouncementChannels){
+                    if (roleName in roleAnnouncementChannels) {
                         //console.log('i got here')
                         message.channel.send(`Success! You have been granted the ${roleName} role. Check out the <#${roleAnnouncementChannels[roleName]}> channel for more information, and post in the <#${roleChatChannels[roleName]}> channel for an in-game invite. Don't forget to check the pins in each text channel.`)
                     }
-                    else if(!(roleName in roleAnnouncementChannels) && roleName in roleChatChannels){
+                    else if (!(roleName in roleAnnouncementChannels) && roleName in roleChatChannels) {
                         //console.log('im also here')
                         message.channel.send(`Success! You have been granted the ${roleName} role. Check out the <#${roleChatChannels[roleName]}> channel for more information.`)
                     }
