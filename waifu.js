@@ -2,14 +2,84 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 const fetch = require('node-fetch')
 
+//api key for discourse
 var ApiKey = '461d1b8c3074b73f6e5255ad5b1a92d7326dc5596145c8d23728fef99d41f3db'
+
+//client key for discord
 var clientKey = 'NTkxNDMyMjYyNDA3Njg0MDk3.XQws3Q.vYgX6W-sQH83vzeAi-N1m87cyVU'
 
+
+//prefix for bot commands
 const prefix = '.'
 
-var welcomeChannelID = '<#485565633099071509>'
-var botChannel = '482491530935009280'
 var debug = false
+
+//discord welcome channel
+var welcomeChannelID = '<#485565633099071509>'
+
+//bot spam channel
+var botChannel = '482491530935009280'
+
+//CHANGEABLE VARIABLES
+
+//roles array - add additional roles to this
+var roles = ["Destiny-2", "Division-2", "Diablo-3", "ESO", "FFXIV", "Get-Together", "Minecraft", "WoW-A", "WoW-C", "WoW-H"]
+
+//role announcement channel dict
+var roleAnnouncementChannels = {
+    'Destiny-2': '526564744430223360', 'Division-2': '526564744430223360', 'Diablo-3': '526564744430223360',
+    'ESO': '512441526362701825', 'FFXIV': '554728750684831756', 'Minecraft': '526564744430223360',
+    'WoW-A': '497199207937998850', 'WoW-C': '526564744430223360', 'WoW-H': '512248600663818240'
+};
+
+//role chat channel dict
+var roleChatChannels = {
+    "Destiny-2": '485266848598982677', "Division-2": '485266848598982677', "Diablo-3": '485266848598982677', "ESO": '512441643731910656',
+    FFXIV: '554729746240503820', "Get-Together": '585910866461982744', "Minecraft": '591832637275111445', "WoW-A": '483029202979782666',
+    "WoW-C": '591981450992025603', "WoW-H": '512249205280997380'
+};
+
+//ERROR MESSAGES - Edit this as you like.
+
+//On DM Message - Error. Bot doesn't do DM commands as of now.
+var dmError = `This bot does not accept DM commands. Please use the <#${botChannel}> channel.`
+
+//on iAm, if member already has Member role
+var iAmAlreadySet = 'You already have the Member role. Are you trying to get a specific game role? Use .setRole [Role Name] to do this, view roles using .rolelist.'
+
+//on iAm, if account is unapproved or suspended
+var iAmUnapprovedError = 'Your account has not been approved yet, or is suspended. Please contact a leader for help.'
+
+//iAm failed to set discord nickname
+var iAmFailedToSetDiscord = 'I was unable to change your discord nickname on the server. Please change your nickname to match your forum username. Thank you!'
+
+//on iAm, failed to set role for unknown reason
+var iAmFailedToSetRole = 'Failed to set role to Member. Please contact a leader for assistance.'
+
+//iAm no account found
+var iAmNotFound = 'An account for the supplied username was not found. Have you registered with our forums yet?'
+
+//set role error
+var setRoleError = 'Error: Failed to set role. Did you type it correctly? See list of valid roles with \'.rolelist\'.'
+
+//set role invalid format
+var setRoleInvalidFormat = 'Invalid format. Correct format is \'.setRole [Role]\'. See list of valid roles with \'.rolelist\'.'
+
+//set role already error
+var setRoleAlreadyError = 'You already have this role.'
+
+//remove role invalid format
+var removeRoleInvalidFormat = 'Invalid format. Correct format is \'.removeRole [Role]\'. See list of valid roles with \'.rolelist\'.'
+
+//remove role error
+var removeRoleError = 'Error: Failed to remove role. Did you type it correctly? See list of valid roles with \'.rolelist\'.'
+
+//remove roled but doesn't have role
+var removeRoleAlreadyRemoved = 'You don\'t have this role.'
+
+//Invalid Command
+var invalidCommand = 'Unknown command. Valid commands are \'.iam [Forum Username]\', \'.setRole [Role]\', \'.removeRole [Role]\', \'.roleList\'. Type \'.help [command]\' for more info on each command.'
+
 
 client.once('ready', () => {
     console.log('Ready!');
@@ -17,8 +87,8 @@ client.once('ready', () => {
 
 client.on('message', async message => {
 
-    if(message.channel.type === 'dm' && !message.author.bot){
-        message.author.send(`This bot does not accept DM commands. Please use the <#${botChannel}> channel.`)
+    if (message.channel.type === 'dm' && !message.author.bot) {
+        message.author.send(dmError)
         return
     }
 
@@ -33,18 +103,27 @@ client.on('message', async message => {
         iamCommand(message, args)
     }
 
+    //Set Role Command
     else if (command === 'setrole') {
         setRoleCommand(message, args)
     }
 
+    //Remove Role Command
     else if (command === 'removerole') {
         removeRoleCommand(message, args)
     }
 
+    //Role List Command
+    else if (command === 'rolelist') {
+        roleListCommand(message, args)
+    }
+
+    //Help Command
     else if (command === 'help') {
         helpCommand(message, args)
     }
 
+    //Easter Eggs
     else if (command === 'goodbot') {
         message.channel.send('Thank you :)')
     }
@@ -74,12 +153,16 @@ client.on('message', async message => {
         avastiCommand(message, args)
     }
 
-    else if (command === 'tae'){
+    else if (command === 'tae') {
         message.channel.send('https://tenor.com/view/sad-walk-of-shame-shame-shameful-head-down-gif-5548725')
     }
 
+    else if (command === 'cata') {
+        message.channel.send('https://tenor.com/view/angry-panda-mascot-mad-gif-3456638')
+    }
+
     else {
-        message.channel.send('Unknown command. Valid commands are \'.iam\' [Forum Username], \'.setRole\' [Role], \'.removeRole\' [Role]. Type \'.help [command]\' for more info on each command.')
+        message.channel.send(invalidCommand)
     }
 
 
@@ -101,15 +184,15 @@ If your Discord Name on the forums is not correct, you will receive an error mes
 Proper usage: .iam [Forum Username]
     
 **Then, you can set your preferred game role by using this command:**
-**.setRole** - The .setRole command grants you a role specifically correlating to a game (or Get-Together). Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).
+**.setRole** - The .setRole command grants you a role specifically correlating to a game (or Get-Together). See list of valid roles with \'.rolelist\'.
 Proper usage: .setRole [Role Name]
     
 **Additionally, if you want to remove a game from your list of roles:**
-**.removeRole** - The .removeRole command removes you from a role specifically correlating to a game (or Get-Together). Same roles as above.
+**.removeRole** - The .removeRole command removes you from a role specifically correlating to a game (or Get-Together). See list of valid roles with \'.rolelist\'.
 Proper usage: .removeRole [Role Name]
 
 **Having troubles? Use the .help command:**
-**.help** - Valid commands are \'.iam\', \'.setRole\', \'.removeRole\'. Type \'.help [command]\' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>
+**.help** - Valid commands are \'.iam\', \'.setRole\', \'.removeRole\', \'.rolelist\'. Type \'.help [command]\' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>
     
 If you need any additional help or assistance please contact any Officer or Above. Thanks and have a great day!`)
 })
@@ -155,7 +238,7 @@ async function iamCommand(message, args) {
 
 
                 if (body.approved === false || body.suspended === true) {
-                    message.channel.send('Your account has not been approved yet, or is suspended. Please contact a leader for help.')
+                    message.channel.send(iAmUnapprovedError)
                 }
 
                 else if (body.approved === true && body.suspended === false) {
@@ -174,28 +257,28 @@ async function iamCommand(message, args) {
                         const guildMember = message.member
                         let role = message.guild.roles.find(r => r.name === 'Member')
                         if (message.member.roles.find(r => r.name === 'Member')) {
-                            message.channel.send('You already have the Member role. Are you trying to get a specific game role? Use `.setRole [Role Name]` to do this.')
+                            message.channel.send(iAmAlreadySet)
                         }
                         else {
                             try {
                                 await guildMember.addRole(role)
-                                message.channel.send(`Welcome to Evolved! You\'ve been given the \'Member\' role and can now see all of the channels! Check the ${welcomeChannelID} channel for more info.`)
 
                                 if (message.guild.members.get(client.user.id).hasPermission("CHANGE_NICKNAME")) {
                                     try {
                                         await message.member.setNickname(body.username)
-
+                                        message.channel.send(`Welcome to Evolved, <@${message.author.id}>! You\'ve been given the \'Member\' role and can now see all of the channels! You can use the \'.setRole\' command to assign yourself roles pertaining to specific games. Check the ${welcomeChannelID} channel for more info.`)
                                     }
                                     catch (err) {
                                         if (body.username != message.member.nickname) {
-                                            message.channel.send('I was unable to change your discord nickname on the server. Please change your nickname to match your forum username. Thank you!')
-                                        } 
+                                            message.channel.send(`Welcome to Evolved, <@${message.author.id}>! You\'ve been given the \'Member\' role and can now see all of the channels! You can use the \'.setRole\' command to assign yourself roles pertaining to specific games. Check the ${welcomeChannelID} channel for more info.`)
+                                            message.channel.send(iAmFailedToSetDiscord)
+                                        }
                                     }
 
                                 }
                             }
                             catch (err) {
-                                message.channel.send('Failed to set role. Please try again or contact an officer for help.')
+                                message.channel.send(iAmFailedToSetRole)
                             }
 
                         }
@@ -203,7 +286,7 @@ async function iamCommand(message, args) {
                 }
             }
             else {
-                message.channel.send('An account for the supplied username was not found. Have you registered with our forums yet?')
+                message.channel.send(iAmNotFound)
             }
         }
 
@@ -215,38 +298,47 @@ async function setRoleCommand(message, args) {
 
     //console.log("got here")
     if (args === undefined || args.length == 0) {
-        message.channel.send('Invalid format. Correct format is \'.setRole [Role]\'. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send(setRoleInvalidFormat)
     }
 
     else if (args.length > 1) {
-        message.channel.send('Invalid format. Correct format is \'.setRole [Role]\'. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send(setRoleInvalidFormat)
     }
 
     else {
 
         var roleName = (args[0])
 
-        //CATA GO HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-        //append new roles by typing || roleName === 'WoW-C' inside the closing ')' (as an example) so the line would become if(roleName === 'ESO' || roleName === 'FFXIV' || roleName === 'WoW-A' || roleName === 'WoW-H' || roleName === 'WoW-C')
-        if (roleName === 'ESO' || roleName === 'FFXIV' || roleName === 'WoW-A' || roleName === 'WoW-H' || roleName === 'Get-Together') {
+        if (roles.includes(roleName)) {
             const guildMember = message.member
             let role = message.guild.roles.find(r => r.name === roleName)
             if (message.member.roles.find(r => r.name === roleName)) {
-                message.channel.send('You already have this role.')
+                message.channel.send(setRoleAlreadyError)
             }
             else {
-                //console.log('didnt fail yet')
+                // console.log('didnt fail yet')
                 try {
                     await guildMember.addRole(role)
-                    message.channel.send(`Success! You have been granted the ${roleName} role. Check out the announcements tab in the ${roleName} discord section for more information, and (if this role is for a game) post in the ${roleName} chat channel for a guild invite. Don't forget to check the pins in each text channel.`)
+                    if (roleName in roleAnnouncementChannels) {
+                        //console.log('i got here')
+                        message.channel.send(`Success! You have been granted the ${roleName} role. Check out the <#${roleAnnouncementChannels[roleName]}> channel for more information, and post in the <#${roleChatChannels[roleName]}> channel for an in-game invite. Don't forget to check the pins in each text channel.`)
+                    }
+                    else if (!(roleName in roleAnnouncementChannels) && roleName in roleChatChannels) {
+                        //console.log('im also here')
+                        message.channel.send(`Success! You have been granted the ${roleName} role. Check out the <#${roleChatChannels[roleName]}> channel for more information.`)
+                    }
+                    else {
+                        //console.log('am i here?')
+                        message.channel.send(`Success! You have been granted the ${roleName} role. Check out the ${roleName} discord section for more information.`)
+                    }
                 }
                 catch (err) {
-                    message.channel.send('Error: Failed to set role. Did you type it correctly? Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+                    message.channel.send(setRoleError)
                 }
             }
         }
         else {
-            message.channel.send('Error: Failed to set role. Did you type it correctly? Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+            message.channel.send(setRoleError)
         }
     }
 }
@@ -254,19 +346,17 @@ async function setRoleCommand(message, args) {
 async function removeRoleCommand(message, args) {
     //console.log("got here")
     if (args === undefined || args.length == 0) {
-        message.channel.send('Invalid format. Correct format is \'.removeRole [Role]\'. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send(removeRoleInvalidFormat)
     }
 
     else if (args.length > 1) {
-        message.channel.send('Invalid format. Correct format is \'.removeRole [Role]\'. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send(removeRoleInvalidFormat)
     }
     else {
 
         var roleName = (args[0])
 
-        //CATA GO HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-        //append new roles by typing || roleName === 'WoW-C' inside the closing ')' (as an example) so the line would become if(roleName === 'ESO' || roleName === 'FFXIV' || roleName === 'WoW-A' || roleName === 'WoW-H' || roleName === 'WoW-C')
-        if (roleName === 'ESO' || roleName === 'FFXIV' || roleName === 'WoW-A' || roleName === 'WoW-H' || roleName === 'Get-Together') {
+        if (roles.includes(roleName)) {
             const guildMember = message.member
             let role = message.guild.roles.find(r => r.name === roleName)
             if (message.member.roles.find(r => r.name === roleName)) {
@@ -276,18 +366,31 @@ async function removeRoleCommand(message, args) {
                     message.channel.send(`Success! You have been removed from the ${roleName} role.`)
                 }
                 catch (err) {
-                    message.channel.send('Error: Failed to remove role. Did you type it correctly? Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+                    message.channel.send(removeRoleError)
                 }
 
             }
             else {
-                message.channel.send('You do not have this role.')
+                message.channel.send(removeRoleAlreadyRemoved)
             }
         }
         else {
-            message.channel.send('Error: Failed to remove role. Did you type it correctly? Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+            message.channel.send(removeRoleError)
         }
     }
+}
+
+async function roleListCommand(message, args) {
+
+    var responseString = 'Valid roles are: '
+
+    roles.forEach(role => {
+        responseString = responseString + '\'' + role + '\', '
+    });
+    responseString = responseString + ' **Case Sensitive**.'
+
+    message.channel.send(responseString)
+
 }
 
 async function helpCommand(message, args) {
@@ -295,7 +398,7 @@ async function helpCommand(message, args) {
     //message.channel.send('Work in progress...')
 
     if (args === undefined || args.length == 0) {
-        message.channel.send('Valid commands are \'.iam\' [Forum Username], \'.setRole\' [Role], \'.removeRole\' [Role]. Type \'.help [command]\' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>')
+        message.channel.send('Valid commands are \'.iam [Forum Username]\', \'.setRole [Role]\', \'.removeRole [Role]\', \'.roleList\'. Type \'.help [command]\' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>')
     }
 
     else if (args[0] === '.iam' || args[0] === 'iam') {
@@ -304,15 +407,20 @@ async function helpCommand(message, args) {
     }
 
     else if (args[0] === '.setRole' || args[0] === 'setRole' || args[0] === '.setrole' || args[0] === 'setrole') {
-        message.channel.send('The .setRole command grants you a role specifically correlating to a game. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send('The .setRole command grants you a role specifically correlating to a game. See list of valid roles with \'.rolelist\'.')
         message.channel.send('Proper usage: `.setRole [Role Name]`')
     }
 
     else if (args[0] === '.removeRole' || args[0] === 'removeRole' || args[0] === '.removerole' || args[0] === 'removerole') {
-        message.channel.send('The .removeRole command removes you from a role specifically correlating to a game. Valid roles are \'ESO\', \'FFXIV\', \'WoW-A\', \'WoW-H\', \'Get-Together\' (Case Sensitive).')
+        message.channel.send('The .removeRole command removes you from a role specifically correlating to a game. See list of valid roles with \'.rolelist\'.')
         message.channel.send('Proper usage: `.removeRole [Role Name]`')
     }
-    else { message.channel.send('Valid commands are \'.iam\' [Forum Username], \'.setRole\' [Role], \'.removeRole\' [Role]. Type \'.help [command]\' for more info on each command.') }
+
+    else if (args[0] === '.roleList' || args[0] === '.rolelist' || args[0] === 'roleList' || args[0] === 'rolelist') {
+        message.channel.send('The .rolelist command displays a list of roles you can assign to yourself.')
+    }
+
+    else { message.channel.send('Valid commands are \'.iam [Forum Username]\', \'.setRole [Role]\', \'.removeRole [Role]\', \'.roleList\'. Type \'.help [command]\' for more info on each command.') }
 
 }
 
