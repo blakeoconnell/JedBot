@@ -6,7 +6,7 @@ const fetch = require('node-fetch')
 var ApiKey = '461d1b8c3074b73f6e5255ad5b1a92d7326dc5596145c8d23728fef99d41f3db'
 
 //client key for discord
-var clientKey = 'NTkxNDMyMjYyNDA3Njg0MDk3.XQws3Q.vYgX6W-sQH83vzeAi-N1m87cyVU'
+var clientKey = 'NTkxNDMyMjYyNDA3Njg0MDk3.XRPqnA.kVm543PkJhp-RourMX8ZN3rs1Ng'
 
 
 //prefix for bot commands
