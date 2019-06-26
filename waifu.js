@@ -23,20 +23,21 @@ var botChannel = '482491530935009280'
 //CHANGEABLE VARIABLES
 
 //roles array - add additional roles to this
-var roles = ["Destiny-2", "Division-2", "Diablo-3", "ESO", "FFXIV", "Get-Together", "Minecraft", "WoW-A", "WoW-C", "WoW-H"]
+var roles = ["Apex", "Destiny-2", "Division-2", "Diablo-3", "ESO", "FFXIV", "Get-Together", "Minecraft", "Overwatch", "WoW-A", "WoW-C", "WoW-H"]
 
 //role announcement channel dict
 var roleAnnouncementChannels = {
     'Destiny-2': '526564744430223360', 'Division-2': '526564744430223360', 'Diablo-3': '526564744430223360',
     'ESO': '512441526362701825', 'FFXIV': '554728750684831756', 'Minecraft': '526564744430223360',
-    'WoW-A': '497199207937998850', 'WoW-C': '526564744430223360', 'WoW-H': '512248600663818240'
+    'WoW-A': '497199207937998850', 'WoW-C': '526564744430223360', 'WoW-H': '512248600663818240',
+    'Apex': '526564744430223360', 'Overwatch': '526564744430223360'
 };
 
 //role chat channel dict
 var roleChatChannels = {
     "Destiny-2": '485266848598982677', "Division-2": '485266848598982677', "Diablo-3": '485266848598982677', "ESO": '512441643731910656',
     FFXIV: '554729746240503820', "Get-Together": '585910866461982744', "Minecraft": '591832637275111445', "WoW-A": '483029202979782666',
-    "WoW-C": '591981450992025603', "WoW-H": '512249205280997380'
+    "WoW-C": '591981450992025603', "WoW-H": '512249205280997380', "Apex": "485266848598982677", "Overwatch": "485266848598982677"
 };
 
 //ERROR MESSAGES - Edit this as you like.
@@ -161,6 +162,33 @@ client.on('message', async message => {
         message.channel.send('https://tenor.com/view/angry-panda-mascot-mad-gif-3456638')
     }
 
+    else if (command === 'welcome') {
+        message.channel.send(`(If you are here for a pug or pickup group, please disregard this message. You will be dragged to the appropriate channel when you join the Evolved General voice channel.)
+
+Hello and welcome to Evolved Gaming.
+        
+I am **Jedbot**, Evolved's Personal Assistant. I will be assisting you with setting up your roles on our Evolved Discord server. If you are not yet registered on our forums, please start there: <https://evolvedgaming.org/>. Once you're registered, please use the following info to continue:
+        
+In the <#${botChannel}>, use the following commands:
+        
+**Start here:**
+**.iam** - The .iam command verifies your membership on the Evolved Forums. If verified, you will be granted the Member role and your Discord Name on the server will be updated to match your Forum username. 
+If your Discord Name on the forums is not correct, you will receive an error message with instructions on how to update your Discord Name on the forums. 
+Proper usage: .iam [Forum Username]
+        
+**Looking for roles so you can be @mentioned**
+**.rolelist** - Brings up the list with our current roles. Please note: roles are **CASE SENSITIVE**.
+            
+**Then, you can set your preferred game role by using this command:**
+**.setRole** - The .setRole command grants you a role specifically correlating to a game (or Get-Together). See list of valid roles with '.rolelist'.
+Proper usage: .setRole [Role Name]
+        
+**Having trouble? Use the .help command:**
+**.help** - Valid commands are '.iam', '.setRole', '.removeRole', '.rolelist'. Type '.help [command]' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>
+            
+If you need any additional help or assistance please first **read the pins** and if still having trouble, contact any Officer or Above. Thanks and have a great day!`)
+    }
+
     else {
         message.channel.send(invalidCommand)
     }
@@ -169,8 +197,7 @@ client.on('message', async message => {
 })
 
 client.on('guildMemberAdd', member => {
-    member.send(`
-    (If you are here for a pug or pickup group, please disregard this DM. You will be dragged to the appropriate channel when you join the Evolved General voice channel.)
+    member.send(`(If you are here for a pug or pickup group, please disregard this DM. You will be dragged to the appropriate channel when you join the Evolved General voice channel.)
 
 Hello and welcome to Evolved Gaming.
 
@@ -182,19 +209,18 @@ In the <#${botChannel}>, use the following commands:
 **.iam** - The .iam command verifies your membership on the Evolved Forums. If verified, you will be granted the Member role and your Discord Name on the server will be updated to match your Forum username. 
 If your Discord Name on the forums is not correct, you will receive an error message with instructions on how to update your Discord Name on the forums. 
 Proper usage: .iam [Forum Username]
+
+**Looking for roles so you can be @mentioned**
+**.rolelist** - Brings up the list with our current roles. Please note: roles are **CASE SENSITIVE**.
     
 **Then, you can set your preferred game role by using this command:**
-**.setRole** - The .setRole command grants you a role specifically correlating to a game (or Get-Together). See list of valid roles with \'.rolelist\'.
+**.setRole** - The .setRole command grants you a role specifically correlating to a game (or Get-Together). See list of valid roles with '.rolelist'.
 Proper usage: .setRole [Role Name]
-    
-**Additionally, if you want to remove a game from your list of roles:**
-**.removeRole** - The .removeRole command removes you from a role specifically correlating to a game (or Get-Together). See list of valid roles with \'.rolelist\'.
-Proper usage: .removeRole [Role Name]
 
-**Having troubles? Use the .help command:**
-**.help** - Valid commands are \'.iam\', \'.setRole\', \'.removeRole\', \'.rolelist\'. Type \'.help [command]\' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>
+**Having trouble? Use the .help command:**
+**.help** - Valid commands are '.iam', '.setRole', '.removeRole', '.rolelist'. Type '.help [command]' for more info on each command. Make sure you\'re registered on our website at <https://evolvedgaming.org/>
     
-If you need any additional help or assistance please contact any Officer or Above. Thanks and have a great day!`)
+If you need any additional help or assistance please first **read the pins** and if still having trouble, contact any Officer or Above. Thanks and have a great day!`)
 })
 
 
