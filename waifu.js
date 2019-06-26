@@ -18,7 +18,7 @@ var debug = false
 var welcomeChannelID = '<#485565633099071509>'
 
 //bot spam channel
-var botChannel = '482491530935009280'
+var botChannel = '585994441957965824'
 
 //CHANGEABLE VARIABLES
 
@@ -417,7 +417,7 @@ async function roleListCommand(message, args) {
         responseString += '- ' + role + '\r\n'
     });
     responseString += '```'
-    responseString += 'Roles are **Case Sensitive**.'
+    responseString += 'Roles are Case Sensitive.**'
 
     message.channel.send(responseString)
 
