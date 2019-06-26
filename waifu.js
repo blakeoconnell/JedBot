@@ -408,12 +408,16 @@ async function removeRoleCommand(message, args) {
 
 async function roleListCommand(message, args) {
 
-    var responseString = 'Valid roles are: '
-
+    var responseString = '**Members may self-select from the following...\r\n'
+    responseString += '```asciidoc\r\n'
+    responseString += 'Valid Roles:\r\n'
+    responseString += '===============\r\n'
+    
     roles.forEach(role => {
-        responseString = responseString + '\'' + role + '\', '
+        responseString += '- ' + role + '\r\n'
     });
-    responseString = responseString + ' **Case Sensitive**.'
+    responseString += '```'
+    responseString += 'Roles are **Case Sensitive**.'
 
     message.channel.send(responseString)
 
