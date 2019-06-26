@@ -18,7 +18,7 @@ var debug = false
 var welcomeChannelID = '<#485565633099071509>'
 
 //bot spam channel
-var botChannel = '585994441957965824'
+var botChannel = '482491530935009280'
 
 //CHANGEABLE VARIABLES
 
