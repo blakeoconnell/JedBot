@@ -1,13 +1,13 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
 const fetch = require('node-fetch')
+const auth = require('./config/auth.json')
 
 //api key for discourse
-var ApiKey = '461d1b8c3074b73f6e5255ad5b1a92d7326dc5596145c8d23728fef99d41f3db'
+var ApiKey = auth.ApiKey
 
 //client key for discord
-var clientKey = 'NTkxNDMyMjYyNDA3Njg0MDk3.XRPqnA.kVm543PkJhp-RourMX8ZN3rs1Ng'
-
+var clientKey = auth.clientKey
 
 //prefix for bot commands
 const prefix = '.'
