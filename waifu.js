@@ -3,12 +3,6 @@ const client = new Discord.Client()
 const fetch = require('node-fetch')
 const auth = require('./config/auth.json')
 
-//api key for discourse
-var ApiKey = auth.ApiKey
-
-//client key for discord
-var clientKey = auth.clientKey
-
 //prefix for bot commands
 const prefix = '.'
 
@@ -228,7 +222,7 @@ async function iamCommand(message, args) {
 
     var myHeaders = new fetch.Headers()
 
-    myHeaders.append('Api-Key', ApiKey)
+    myHeaders.append('Api-Key', auth.ApiKey)
 
     var myInit = {
         headers: myHeaders
@@ -477,5 +471,5 @@ async function avastiCommand(message, args) {
     }
 }
 
-client.login(clientKey)
+client.login(auth.clientKey)
 console.log('Logged in.')
